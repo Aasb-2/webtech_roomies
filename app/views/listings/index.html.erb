@@ -1,0 +1,48 @@
+<% content_for :title, "Browse Listings - Roomies" %>
+
+<h1 class="h3 mb-4">Browse Listings</h1>
+
+<%= form_with url: listings_path, method: :get, local: true, class: "row g-2 mb-4" do |f| %>
+  <div class="col-md-3">
+    <%= f.select :neighborhood, options_for_select(@neighborhoods, params[:neighborhood]),
+          { include_blank: "Any neighborhood" }, class: "form-select" %>
+  </div>
+  <div class="col-md-2">
+    <%= f.number_field :max_rent, value: params[:max_rent], placeholder: "Max rent", class: "form-control" %>
+  </div>
+  <div class="col-md-3">
+    <%= f.date_field :available_from, value: params[:available_from], class: "form-control" %>
+  </div>
+  <div class="col-md-2">
+    <%= f.text_field :amenity, value: params[:amenity], placeholder: "Amenity (e.g. wifi)", class: "form-control" %>
+  </div>
+  <div class="col-md-2">
+    <%= f.submit "Filter", class: "btn btn-primary w-100" %>
+  </div>
+<% end %>
+
+<% if @listings.any? %>
+  <div class="row g-3">
+    <% @listings.each do |listing| %>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= listing.property.neighborhood %> &bull; <%= listing.property.property_type.capitalize %></h5>
+            <p class="card-text text-muted mb-1">
+              $<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month
+              &bull; <%= listing.property.bedrooms %> Bed, <%= listing.property.bathrooms %> Bath
+            </p>
+            <p class="card-text text-muted mb-1">
+              Available <%= listing.available_date.strftime("%b %-d, %Y") %>
+              <% if listing.furnished? %> &bull; Furnished <% end %>
+              <% if listing.private_bathroom? %> &bull; Private bathroom <% end %>
+            </p>
+            <%= link_to "View Details", listing_path(listing), class: "btn btn-sm btn-outline-secondary mt-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-muted">No listings match your search. Try adjusting your filters.</p>
+<% end %>

@@ -1,0 +1,14 @@
+host_one:
+  name: Ana Restrepo
+  email: ana.host@example.com
+  role: member
+
+seeker_one:
+  name: Diego Torres
+  email: diego.seeker@example.com
+  role: member
+
+moderator_one:
+  name: Mora Delgado
+  email: mora.moderator@example.com
+  role: moderator

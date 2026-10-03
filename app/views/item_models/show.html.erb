@@ -1,9 +1,0 @@
-<h1>Vista detalle</h1>
-
-<h2><%= @item_model.display_name %></h2>
-
-<ul>
-  <% @item_model.units.each do |unit| %>
-    <li><%= unit.asset_tag %></li>
-  <% end %>
-</ul>

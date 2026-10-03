@@ -1,0 +1,61 @@
+<% content_for :title, "#{@listing.property.neighborhood} Listing - Roomies" %>
+
+<%= link_to "&larr; Back to listings".html_safe, listings_path, class: "d-inline-block mb-3" %>
+
+<div class="row">
+  <div class="col-md-8">
+    <h1 class="h3">
+      Room in <%= @listing.property.neighborhood %>
+      <span class="badge bg-secondary text-uppercase"><%= @listing.state %></span>
+    </h1>
+
+    <p class="text-muted">
+      <%= @listing.property.property_type.capitalize %> &bull;
+      <%= @listing.property.bedrooms %> bedrooms, <%= @listing.property.bathrooms %> bathrooms
+    </p>
+
+    <p><%= simple_format(@listing.description) %></p>
+
+    <h2 class="h5 mt-4">Amenities</h2>
+    <% if @listing.property.amenities.any? %>
+      <ul class="list-inline">
+        <% @listing.property.amenities.each do |amenity| %>
+          <li class="list-inline-item badge bg-light text-dark border"><%= amenity.tr("_", " ") %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No amenities listed.</p>
+    <% end %>
+
+    <h2 class="h5 mt-4">Shared spaces</h2>
+    <p><%= @listing.property.shared_spaces.presence || "Not specified." %></p>
+
+    <h2 class="h5 mt-4">Reviews</h2>
+    <% if @reviews.any? %>
+      <% @reviews.each do |review| %>
+        <div class="border rounded p-3 mb-2">
+          <strong><%= review.rating %>/5</strong>
+          <p class="mb-0"><%= review.comment %></p>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-muted">No reviews yet for this property.</p>
+    <% end %>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h4">$<%= number_with_delimiter(@listing.monthly_rent.to_i) %>/month</h3>
+        <p class="mb-1">Deposit: $<%= number_with_delimiter(@listing.deposit.to_i) %></p>
+        <p class="mb-1">Available: <%= @listing.available_date.strftime("%b %-d, %Y") %></p>
+        <% if @listing.minimum_stay.present? %>
+          <p class="mb-1">Minimum stay: <%= pluralize(@listing.minimum_stay, "month") %></p>
+        <% end %>
+        <p class="mb-1"><%= @listing.furnished? ? "Furnished" : "Unfurnished" %></p>
+        <p class="mb-3"><%= @listing.private_bathroom? ? "Private bathroom" : "Shared bathroom" %></p>
+        <%= link_to "View property details", property_path(@listing.property), class: "btn btn-outline-secondary w-100" %>
+      </div>
+    </div>
+  </div>
+</div>

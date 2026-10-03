@@ -1,0 +1,20 @@
+published_one:
+  property: apartment_one
+  monthly_rent: 950.00
+  deposit: 950.00
+  available_date: <%= 10.days.from_now.to_date %>
+  minimum_stay: 6
+  furnished: true
+  private_bathroom: false
+  state: published
+  description: Bright room with a shared rooftop terrace.
+
+draft_one:
+  property: apartment_one
+  monthly_rent: 700.00
+  deposit: 350.00
+  available_date: <%= 30.days.from_now.to_date %>
+  furnished: false
+  private_bathroom: false
+  state: draft
+  description: Still being prepared for publication.
