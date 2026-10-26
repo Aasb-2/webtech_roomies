@@ -1,0 +1,32 @@
+<% content_for :title, "Applications - Roomies" %>
+
+<h1 class="h3 mb-4">Applications</h1>
+
+<h2 class="h5">
+  Received <span id="pending_count" class="badge bg-warning text-dark"><%= @pending_count %> pending</span>
+</h2>
+
+<% if @received.any? %>
+  <% @received.each do |application| %>
+    <%= render "applications/row", application: application %>
+  <% end %>
+<% else %>
+  <p class="text-muted">No applications received yet.</p>
+<% end %>
+
+<h2 class="h5 mt-5">Sent</h2>
+<% if @sent.any? %>
+  <ul class="list-group">
+    <% @sent.each do |application| %>
+      <li class="list-group-item">
+        <%= application.listing.property.address %> &bull;
+        <span class="badge bg-secondary text-uppercase"><%= application.state %></span>
+        <% if application.visit.present? %>
+          &bull; Visit: <span class="badge bg-info text-dark text-uppercase"><%= application.visit.status %></span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-muted">You haven't applied to anything yet.</p>
+<% end %>

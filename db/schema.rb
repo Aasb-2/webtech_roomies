@@ -10,9 +10,54 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_01_120008) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_21_205909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "amenities", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_amenities_on_name", unique: true
+  end
 
   create_table "applications", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -29,18 +74,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120008) do
     t.index ["state"], name: "index_applications_on_state"
   end
 
-  create_table "item_models", force: :cascade do |t|
-    t.string "brand", null: false
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "listings", force: :cascade do |t|
     t.date "available_date", null: false
     t.datetime "created_at", null: false
     t.decimal "deposit", precision: 10, scale: 2, null: false
-    t.text "description"
     t.boolean "furnished", default: false, null: false
     t.integer "minimum_stay"
     t.decimal "monthly_rent", precision: 10, scale: 2, null: false
@@ -54,20 +91,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120008) do
     t.index ["state"], name: "index_listings_on_state"
   end
 
+  create_table "neighborhoods", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_neighborhoods_on_name", unique: true
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string "address", null: false
-    t.string "amenities", default: [], null: false, array: true
     t.integer "bathrooms", null: false
     t.integer "bedrooms", null: false
     t.datetime "created_at", null: false
     t.bigint "host_id", null: false
-    t.string "neighborhood", null: false
+    t.bigint "neighborhood_id", null: false
     t.string "property_type", null: false
     t.text "shared_spaces"
     t.datetime "updated_at", null: false
-    t.index ["amenities"], name: "index_properties_on_amenities", using: :gin
     t.index ["host_id"], name: "index_properties_on_host_id"
-    t.index ["neighborhood"], name: "index_properties_on_neighborhood"
+    t.index ["neighborhood_id"], name: "index_properties_on_neighborhood_id"
+  end
+
+  create_table "property_amenities", force: :cascade do |t|
+    t.bigint "amenity_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "property_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["amenity_id"], name: "index_property_amenities_on_amenity_id"
+    t.index ["property_id", "amenity_id"], name: "index_property_amenities_on_property_and_amenity", unique: true
+    t.index ["property_id"], name: "index_property_amenities_on_property_id"
   end
 
   create_table "reports", force: :cascade do |t|
@@ -105,14 +157,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120008) do
     t.index ["user_id"], name: "index_saved_listings_on_user_id"
   end
 
-  create_table "units", force: :cascade do |t|
-    t.string "asset_tag", null: false
-    t.datetime "created_at", null: false
-    t.bigint "item_model_id"
-    t.datetime "updated_at", null: false
-    t.index ["item_model_id"], name: "index_units_on_item_model_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -132,16 +176,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120008) do
     t.index ["status"], name: "index_visits_on_status"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "applications", "listings"
   add_foreign_key "applications", "users", column: "seeker_id"
   add_foreign_key "listings", "properties"
+  add_foreign_key "properties", "neighborhoods"
   add_foreign_key "properties", "users", column: "host_id"
+  add_foreign_key "property_amenities", "amenities"
+  add_foreign_key "property_amenities", "properties"
   add_foreign_key "reports", "listings"
   add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "reviews", "properties"
   add_foreign_key "reviews", "users", column: "seeker_id"
   add_foreign_key "saved_listings", "listings"
   add_foreign_key "saved_listings", "users"
-  add_foreign_key "units", "item_models"
   add_foreign_key "visits", "applications"
 end

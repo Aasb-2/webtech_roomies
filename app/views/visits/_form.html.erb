@@ -1,0 +1,11 @@
+<div class="mt-2 border-top pt-2">
+  <%= form_with url: application_visit_path(application), method: :post, local: true, class: "row g-2 align-items-end" do %>
+    <div class="col-auto">
+      <%= label_tag "visit_proposed_date", "Propose a visit", class: "form-label" %>
+      <%= datetime_local_field_tag "visit[proposed_date]", nil, class: "form-control form-control-sm" %>
+    </div>
+    <div class="col-auto">
+      <%= submit_tag "Propose visit", class: "btn btn-sm btn-outline-primary" %>
+    </div>
+  <% end %>
+</div>

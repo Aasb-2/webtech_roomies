@@ -1,0 +1,69 @@
+<%= form_with model: [property, listing], local: true, html: { multipart: true } do |f| %>
+  <% if listing.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% listing.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= f.label :monthly_rent, class: "form-label" %>
+      <%= f.number_field :monthly_rent, class: "form-control", step: 0.01, min: 0.01, required: true %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= f.label :deposit, class: "form-label" %>
+      <%= f.number_field :deposit, class: "form-control", step: 0.01, min: 0, required: true %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= f.label :available_date, class: "form-label" %>
+      <%= f.date_field :available_date, class: "form-control", required: true %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= f.label :minimum_stay, "Minimum stay (months)", class: "form-label" %>
+      <%= f.number_field :minimum_stay, class: "form-control", min: 1 %>
+    </div>
+  </div>
+
+  <div class="form-check mb-2">
+    <%= f.check_box :furnished, class: "form-check-input" %>
+    <%= f.label :furnished, class: "form-check-label" %>
+  </div>
+
+  <div class="form-check mb-3">
+    <%= f.check_box :private_bathroom, class: "form-check-input" %>
+    <%= f.label :private_bathroom, class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :description, class: "form-label" %>
+    <%= f.rich_text_area :description %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :house_rules, "House rules", class: "form-label" %>
+    <%= f.rich_text_area :house_rules %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :photos, "Photographs", class: "form-label" %>
+    <%= f.file_field :photos, multiple: true, accept: "image/png,image/jpeg,image/webp", class: "form-control" %>
+    <div class="form-text">JPEG, PNG, or WebP, up to 5MB each.</div>
+
+    <% if listing.photos.attached? %>
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        <% listing.photos.each do |photo| %>
+          <%= image_tag photo.variant(resize_to_limit: [150, 110]), class: "rounded border" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

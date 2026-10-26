@@ -1,0 +1,9 @@
+<%= turbo_stream.replace dom_id(@application), partial: "applications/row", locals: { application: @application } %>
+
+<% @auto_rejected.each do |application| %>
+  <%= turbo_stream.replace dom_id(application), partial: "applications/row", locals: { application: application } %>
+<% end %>
+
+<%= turbo_stream.update "pending_count" do %>
+  <%= @pending_count %> pending
+<% end %>

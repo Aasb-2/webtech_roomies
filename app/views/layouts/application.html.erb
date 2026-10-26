@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title><%= content_for(:title) || "Roomies" %></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title><%= content_for(:title) || "Roomies" %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="My App">
@@ -12,15 +12,12 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "actiontext" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -28,13 +25,29 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
       <div class="container">
         <%= link_to "Roomies", root_path, class: "navbar-brand fw-bold" %>
-        <div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
           <%= link_to "Browse Listings", listings_path, class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "My Properties", properties_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Applications", applications_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Neighborhoods", neighborhoods_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Amenities", amenities_path, class: "btn btn-outline-secondary btn-sm" %>
+
+          <%= form_with url: current_user_path, method: :patch, local: true, class: "d-flex align-items-center gap-1 ms-2" do |f| %>
+            <%= f.select :user_id, User.order(:name).pluck(:name, :id), { selected: current_user&.id }, class: "form-select form-select-sm" %>
+            <%= f.submit "Switch", class: "btn btn-sm btn-outline-dark" %>
+          <% end %>
         </div>
       </div>
     </nav>
 
     <main class="container py-4">
+      <% if notice.present? %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+
       <%= yield %>
     </main>
   </body>

@@ -4,7 +4,7 @@
 
 <%= form_with url: listings_path, method: :get, local: true, class: "row g-2 mb-4" do |f| %>
   <div class="col-md-3">
-    <%= f.select :neighborhood, options_for_select(@neighborhoods, params[:neighborhood]),
+    <%= f.select :neighborhood_id, options_from_collection_for_select(@neighborhoods, :id, :name, params[:neighborhood_id]),
           { include_blank: "Any neighborhood" }, class: "form-select" %>
   </div>
   <div class="col-md-2">
@@ -14,7 +14,8 @@
     <%= f.date_field :available_from, value: params[:available_from], class: "form-control" %>
   </div>
   <div class="col-md-2">
-    <%= f.text_field :amenity, value: params[:amenity], placeholder: "Amenity (e.g. wifi)", class: "form-control" %>
+    <%= f.select :amenity_id, options_from_collection_for_select(@amenities, :id, :name, params[:amenity_id]),
+          { include_blank: "Any amenity" }, class: "form-select" %>
   </div>
   <div class="col-md-2">
     <%= f.submit "Filter", class: "btn btn-primary w-100" %>
@@ -26,8 +27,11 @@
     <% @listings.each do |listing| %>
       <div class="col-md-4">
         <div class="card h-100">
+          <% if listing.photos.attached? %>
+            <%= image_tag listing.cover_photo.variant(resize_to_limit: [400, 300]), class: "card-img-top" %>
+          <% end %>
           <div class="card-body">
-            <h5 class="card-title"><%= listing.property.neighborhood %> &bull; <%= listing.property.property_type.capitalize %></h5>
+            <h5 class="card-title"><%= listing.property.neighborhood.name %> &bull; <%= listing.property.property_type.capitalize %></h5>
             <p class="card-text text-muted mb-1">
               $<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month
               &bull; <%= listing.property.bedrooms %> Bed, <%= listing.property.bathrooms %> Bath

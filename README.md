@@ -3,8 +3,6 @@
 Team members:
 Agustín Álvarez
 
-Prerequisites:
-
 ## Prerequisites
 
 Install these before setting up the project:
@@ -22,6 +20,10 @@ Clone the repository, then from its root, run the following in order:
 bundle install
 yarn install
 bin/rails db:create
+bin/rails active_storage:install
+bin/rails action_text:install
+bin/rails db:migrate
+bin/rails db:seed
 ```
 
 ## Running the application
@@ -29,3 +31,9 @@ bin/rails db:create
 ```bash
 bin/dev
 ```
+
+## Notes on this assignment (Assignment 3)
+
+- **Photo uploads:** a listing's photographs must be JPEG, PNG, or WebP, and **5MB or less per file**. Anything else is rejected with a validation error on the listing form.
+- **Acting as a user:** there's still no authentication. Use the user switcher in the top navigation bar to choose which user performs each action — that user becomes the author (host or seeker) of whatever you do next.
+- `db:seed` populates a full set of sample data: neighborhoods, amenities, properties, listings in every lifecycle state (draft, published, reserved, rented, withdrawn), and applications/visits/reviews that exercise the accept/withdraw business rules.

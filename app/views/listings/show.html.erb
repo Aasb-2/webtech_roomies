@@ -1,11 +1,11 @@
-<% content_for :title, "#{@listing.property.neighborhood} Listing - Roomies" %>
+<% content_for :title, "Room in #{@listing.property.neighborhood.name} - Roomies" %>
 
 <%= link_to "&larr; Back to listings".html_safe, listings_path, class: "d-inline-block mb-3" %>
 
 <div class="row">
   <div class="col-md-8">
     <h1 class="h3">
-      Room in <%= @listing.property.neighborhood %>
+      Room in <%= @listing.property.neighborhood.name %>
       <span class="badge bg-secondary text-uppercase"><%= @listing.state %></span>
     </h1>
 
@@ -14,13 +14,21 @@
       <%= @listing.property.bedrooms %> bedrooms, <%= @listing.property.bathrooms %> bathrooms
     </p>
 
-    <p><%= simple_format(@listing.description) %></p>
+    <% if @listing.photos.attached? %>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <% @listing.photos.each do |photo| %>
+          <%= image_tag photo.variant(resize_to_limit: [500, 375]), class: "rounded" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="mb-3"><%= @listing.description %></div>
 
     <h2 class="h5 mt-4">Amenities</h2>
     <% if @listing.property.amenities.any? %>
       <ul class="list-inline">
         <% @listing.property.amenities.each do |amenity| %>
-          <li class="list-inline-item badge bg-light text-dark border"><%= amenity.tr("_", " ") %></li>
+          <li class="list-inline-item badge bg-light text-dark border"><%= amenity.name %></li>
         <% end %>
       </ul>
     <% else %>
@@ -29,6 +37,13 @@
 
     <h2 class="h5 mt-4">Shared spaces</h2>
     <p><%= @listing.property.shared_spaces.presence || "Not specified." %></p>
+
+    <h2 class="h5 mt-4">House rules</h2>
+    <% if @listing.house_rules.present? %>
+      <div><%= @listing.house_rules %></div>
+    <% else %>
+      <p class="text-muted">No house rules provided.</p>
+    <% end %>
 
     <h2 class="h5 mt-4">Reviews</h2>
     <% if @reviews.any? %>
@@ -44,7 +59,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="card">
+    <div class="card mb-3">
       <div class="card-body">
         <h3 class="h4">$<%= number_with_delimiter(@listing.monthly_rent.to_i) %>/month</h3>
         <p class="mb-1">Deposit: $<%= number_with_delimiter(@listing.deposit.to_i) %></p>
@@ -57,5 +72,10 @@
         <%= link_to "View property details", property_path(@listing.property), class: "btn btn-outline-secondary w-100" %>
       </div>
     </div>
+
+    <% if @listing.property.host_id != current_user.id && @listing.published? %>
+      <h3 class="h6">Apply to this room</h3>
+      <%= render "applications/frame", listing: @listing, application: @application %>
+    <% end %>
   </div>
 </div>

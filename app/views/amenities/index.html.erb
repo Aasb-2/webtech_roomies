@@ -1,0 +1,22 @@
+<% content_for :title, "Amenities - Roomies" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Amenities</h1>
+  <%= link_to "New amenity", new_amenity_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @amenities.any? %>
+  <ul class="list-group">
+    <% @amenities.each do |amenity| %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <%= amenity.name %>
+        <div class="d-flex gap-1">
+          <%= link_to "Edit", edit_amenity_path(amenity), class: "btn btn-sm btn-outline-secondary" %>
+          <%= button_to "Delete", amenity, method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Delete this amenity?" } %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-muted">No amenities yet.</p>
+<% end %>

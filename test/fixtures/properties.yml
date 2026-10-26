@@ -1,9 +1,8 @@
 apartment_one:
   host: host_one
+  neighborhood: chapinero
   address: Calle 85 #12-34
-  neighborhood: Chapinero
   property_type: apartment
   bedrooms: 3
   bathrooms: 2
   shared_spaces: Living room, kitchen
-  amenities: [wifi, laundry]

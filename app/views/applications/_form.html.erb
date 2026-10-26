@@ -1,0 +1,28 @@
+<%= form_with model: application, url: listing_application_path(listing), method: :post do |f| %>
+  <% if application.errors.any? %>
+    <div class="alert alert-danger py-2 px-3">
+      <ul class="mb-0">
+        <% application.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-2">
+    <%= f.label :move_in_date, class: "form-label" %>
+    <%= f.date_field :move_in_date, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-2">
+    <%= f.label :duration_months, "Intended stay (months)", class: "form-label" %>
+    <%= f.number_field :duration_months, class: "form-control", min: 1 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :message, class: "form-label" %>
+    <%= f.text_area :message, class: "form-control", rows: 3, required: true %>
+  </div>
+
+  <%= f.submit "Apply", class: "btn btn-primary w-100" %>
+<% end %>

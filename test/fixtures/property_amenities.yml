@@ -1,0 +1,7 @@
+apartment_one_wifi:
+  property: apartment_one
+  amenity: wifi
+
+apartment_one_laundry:
+  property: apartment_one
+  amenity: laundry

@@ -1,0 +1,3 @@
+<% content_for :title, "New Listing - Roomies" %>
+<h1 class="h3 mb-4">New listing for <%= @property.address %></h1>
+<%= render "form", property: @property, listing: @listing %>

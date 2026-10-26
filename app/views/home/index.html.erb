@@ -8,7 +8,8 @@
 <div class="row justify-content-center mb-5">
   <div class="col-md-8">
     <%= form_with url: listings_path, method: :get, local: true, class: "input-group" do |f| %>
-      <%= f.text_field :neighborhood, class: "form-control", placeholder: "Search by neighborhood..." %>
+      <%= f.select :neighborhood_id, options_from_collection_for_select(Neighborhood.order(:name), :id, :name),
+            { include_blank: "Any neighborhood" }, class: "form-select" %>
       <%= f.submit "Search", class: "btn btn-primary" %>
     <% end %>
   </div>
@@ -16,11 +17,14 @@
 
 <h2 class="h4 mb-3">Available Rooms</h2>
 <div class="row g-3">
-  <% Listing.published.includes(:property).order(created_at: :desc).limit(3).each do |listing| %>
+  <% Listing.published.includes(property: :neighborhood).order(created_at: :desc).limit(3).each do |listing| %>
     <div class="col-md-4">
       <div class="card h-100">
+        <% if listing.photos.attached? %>
+          <%= image_tag listing.cover_photo.variant(resize_to_limit: [400, 300]), class: "card-img-top" %>
+        <% end %>
         <div class="card-body">
-          <h5 class="card-title"><%= listing.property.neighborhood %></h5>
+          <h5 class="card-title"><%= listing.property.neighborhood.name %></h5>
           <p class="card-text text-muted">
             $<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month &bull;
             <%= listing.property.bedrooms %> Bed, <%= listing.property.bathrooms %> Bath

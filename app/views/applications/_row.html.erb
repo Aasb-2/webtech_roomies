@@ -1,0 +1,33 @@
+<div id="<%= dom_id(application) %>" class="border rounded p-3 mb-2">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div>
+      <strong><%= application.seeker.name %></strong> applied to
+      <%= link_to application.listing.property.address, listing_path(application.listing) %>
+      <span class="badge bg-secondary text-uppercase"><%= application.state %></span>
+      <p class="mb-0 text-muted">
+        Move-in: <%= application.move_in_date.strftime("%b %-d, %Y") %>
+        <% if application.duration_months.present? %> &bull; <%= pluralize(application.duration_months, "month") %> <% end %>
+      </p>
+      <p class="mb-0"><%= application.message %></p>
+    </div>
+
+    <div class="d-flex gap-1 flex-wrap">
+      <% if application.pending? %>
+        <%= button_to "Shortlist", application_path(application, state: "shortlisted"), method: :patch, class: "btn btn-sm btn-outline-primary" %>
+        <%= button_to "Reject", application_path(application, state: "rejected"), method: :patch, class: "btn btn-sm btn-outline-danger" %>
+      <% end %>
+      <% if application.shortlisted? %>
+        <%= button_to "Accept", application_path(application, state: "accepted"), method: :patch,
+              class: "btn btn-sm btn-success",
+              data: { turbo_confirm: "Accept this applicant? All other pending or shortlisted applications on this listing will be rejected." } %>
+        <%= button_to "Reject", application_path(application, state: "rejected"), method: :patch, class: "btn btn-sm btn-outline-danger" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if application.shortlisted? && application.visit.blank? %>
+    <%= render "visits/form", application: application %>
+  <% elsif application.visit.present? %>
+    <%= render "visits/status", visit: application.visit %>
+  <% end %>
+</div>

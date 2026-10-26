@@ -7,7 +7,6 @@ published_one:
   furnished: true
   private_bathroom: false
   state: published
-  description: Bright room with a shared rooftop terrace.
 
 draft_one:
   property: apartment_one
@@ -17,4 +16,3 @@ draft_one:
   furnished: false
   private_bathroom: false
   state: draft
-  description: Still being prepared for publication.
