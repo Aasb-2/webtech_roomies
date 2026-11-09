@@ -1,0 +1,11 @@
+<%= form_with model: [listing, Report.new], url: listing_reports_path(listing), local: true, class: "mt-3" do |f| %>
+  <div class="mb-2">
+    <%= f.label :reason, class: "form-label" %>
+    <%= f.select :reason, Report::REASONS.map { |r| [r.titleize, r] }, {}, class: "form-select form-select-sm" %>
+  </div>
+  <div class="mb-2">
+    <%= f.label :details, class: "form-label" %>
+    <%= f.text_area :details, rows: 2, class: "form-control form-control-sm" %>
+  </div>
+  <%= f.submit "Report this listing", class: "btn btn-sm btn-outline-danger" %>
+<% end %>

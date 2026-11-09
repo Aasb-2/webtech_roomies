@@ -1,0 +1,17 @@
+<p>Hi <%= @host.name %>,</p>
+
+<p><%= @application.seeker.name %> just applied to your listing at <%= @listing.property.address %>.</p>
+
+<p>
+  Move-in date: <%= @application.move_in_date.strftime("%B %-d, %Y") %><br>
+  <% if @application.duration_months.present? %>
+    Duration: <%= pluralize(@application.duration_months, "month") %><br>
+  <% end %>
+</p>
+
+<% if @application.message.present? %>
+  <p>Their message:</p>
+  <blockquote><%= @application.message %></blockquote>
+<% end %>
+
+<p><%= link_to "Review this application", applications_url %></p>

@@ -1,0 +1,37 @@
+<% content_for :title, "Reports" %>
+
+<h1 class="h3 mb-4">Listing reports</h1>
+
+<% if @reports.empty? %>
+  <p class="text-muted">No reports to review.</p>
+<% else %>
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Listing</th>
+        <th>Reporter</th>
+        <th>Reason</th>
+        <th>Details</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @reports.each do |report| %>
+        <tr>
+          <td><%= link_to report.listing.property.address, listing_path(report.listing) %></td>
+          <td><%= report.reporter.name %></td>
+          <td><%= report.reason.titleize %></td>
+          <td><%= report.details %></td>
+          <td><span class="badge bg-secondary"><%= report.status.titleize %></span></td>
+          <td>
+            <% if report.status == "pending" %>
+              <%= button_to "Mark reviewed", report_path(report), method: :patch, params: { status: "reviewed" }, class: "btn btn-sm btn-outline-success" %>
+              <%= button_to "Dismiss", report_path(report), method: :patch, params: { status: "dismissed" }, class: "btn btn-sm btn-outline-secondary" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

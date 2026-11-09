@@ -1,5 +1,11 @@
 class User < ApplicationRecord
-  ROLES = %w[member moderator].freeze
+  enum :role, { member: "member", moderator: "moderator" }, default: "member", validate: true
+
+  has_secure_password
+
+  generates_token_for :password_reset, expires_in: 15.minutes do
+    password_salt&.last(10)
+  end
 
   has_many :properties, foreign_key: :host_id, inverse_of: :host, dependent: :destroy
   has_many :listings, through: :properties
@@ -8,13 +14,13 @@ class User < ApplicationRecord
   has_many :saved_listings, dependent: :destroy
   has_many :saved_listing_listings, through: :saved_listings, source: :listing
   has_many :reports, foreign_key: :reporter_id, inverse_of: :reporter, dependent: :destroy
+  has_many :sessions, dependent: :destroy
 
   before_validation { email&.downcase!&.strip! }
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false },
                      format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :role, presence: true, inclusion: { in: ROLES }
 
   def moderator?
     role == "moderator"

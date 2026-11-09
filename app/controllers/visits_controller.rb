@@ -1,14 +1,17 @@
 class VisitsController < ApplicationController
   before_action :set_application
+  after_action :verify_authorized
 
   def create
     @visit = @application.build_visit(visit_params.merge(status: "scheduled"))
+    authorize @visit
     @visit.save
     redirect_to applications_path, notice: @visit.persisted? ? "Visit proposed." : @visit.errors.full_messages.to_sentence
   end
 
   def update
     @visit = @application.visit
+    authorize @visit
 
     success = case params[:status]
     when "confirmed" then @visit.confirm!
@@ -24,7 +27,7 @@ class VisitsController < ApplicationController
   private
 
   def set_application
-    @application = Application.find(params[:application_id])
+    @application = policy_scope(Application).find(params[:application_id])
   end
 
   def visit_params

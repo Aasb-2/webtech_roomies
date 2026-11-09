@@ -12,7 +12,7 @@
     </p>
   </div>
 
-  <% if @property.host_id == current_user.id %>
+  <% if current_user && @property.host_id == current_user.id %>
     <div class="d-flex gap-2">
       <%= link_to "Edit property", edit_property_path(@property), class: "btn btn-outline-secondary btn-sm" %>
       <%= button_to "Delete", @property, method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Delete this property and all its listings?" } %>
@@ -82,9 +82,14 @@
 <h2 class="h5 mt-4">Reviews</h2>
 <% if @reviews.any? %>
   <% @reviews.each do |review| %>
-    <div class="border rounded p-3 mb-2">
-      <strong><%= review.rating %>/5</strong>
-      <p class="mb-0"><%= review.comment %></p>
+    <div class="border rounded p-3 mb-2 d-flex justify-content-between align-items-start gap-2">
+      <div>
+        <strong><%= review.rating %>/5</strong>
+        <p class="mb-0"><%= review.comment %></p>
+      </div>
+      <% if current_user && policy(review).destroy? %>
+        <%= button_to "Delete", property_review_path(@property, review), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Delete this review?" } %>
+      <% end %>
     </div>
   <% end %>
 <% else %>

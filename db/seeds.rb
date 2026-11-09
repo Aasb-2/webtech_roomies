@@ -9,16 +9,18 @@ puts "Clearing existing data..."
 [Report, SavedListing, Review, Visit, Application, Listing, Property, Neighborhood, Amenity, User].each(&:destroy_all)
 
 puts "Creating users..."
-moderator = User.create!(name: "Mora Delgado", email: "mora.moderator@roomies.test", role: "moderator")
+SEED_PASSWORD = "Roomies123!"
 
-ana    = User.create!(name: "Ana Restrepo",   email: "ana.host@roomies.test",    role: "member")
-carlos = User.create!(name: "Carlos Jimenez", email: "carlos.host@roomies.test", role: "member")
-lucia  = User.create!(name: "Lucia Pardo",    email: "lucia.host@roomies.test",  role: "member")
+moderator = User.create!(name: "Mora Delgado", email: "mora.moderator@roomies.test", role: "moderator", password: SEED_PASSWORD)
 
-diego     = User.create!(name: "Diego Torres",   email: "diego.seeker@roomies.test",   role: "member")
-valentina = User.create!(name: "Valentina Ruiz", email: "valentina.seeker@roomies.test", role: "member")
-mateo     = User.create!(name: "Mateo Gomez",    email: "mateo.seeker@roomies.test",    role: "member")
-sara      = User.create!(name: "Sara Mendoza",   email: "sara.seeker@roomies.test",     role: "member")
+ana    = User.create!(name: "Ana Restrepo",   email: "ana.host@roomies.test",    role: "member", password: SEED_PASSWORD)
+carlos = User.create!(name: "Carlos Jimenez", email: "carlos.host@roomies.test", role: "member", password: SEED_PASSWORD)
+lucia  = User.create!(name: "Lucia Pardo",    email: "lucia.host@roomies.test",  role: "member", password: SEED_PASSWORD)
+
+diego     = User.create!(name: "Diego Torres",   email: "diego.seeker@roomies.test",   role: "member", password: SEED_PASSWORD)
+valentina = User.create!(name: "Valentina Ruiz", email: "valentina.seeker@roomies.test", role: "member", password: SEED_PASSWORD)
+mateo     = User.create!(name: "Mateo Gomez",    email: "mateo.seeker@roomies.test",    role: "member", password: SEED_PASSWORD)
+sara      = User.create!(name: "Sara Mendoza",   email: "sara.seeker@roomies.test",     role: "member", password: SEED_PASSWORD)
 
 puts "Creating neighborhood catalog..."
 chapinero   = Neighborhood.create!(name: "Chapinero")
@@ -224,3 +226,5 @@ puts "  Visits: #{Visit.count}"
 puts "  Reviews: #{Review.count}"
 puts "  Saved listings: #{SavedListing.count}"
 puts "  Reports: #{Report.count}"
+puts ""
+puts "All seeded users share the password: #{SEED_PASSWORD}"

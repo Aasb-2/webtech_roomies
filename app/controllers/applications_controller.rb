@@ -1,11 +1,16 @@
 class ApplicationsController < ApplicationController
   before_action :set_listing, only: [:create, :destroy]
   before_action :set_application, only: [:update]
+  after_action :verify_authorized
+  after_action :verify_policy_scoped, only: [:index]
 
   def create
     @application = @listing.applications.new(application_params)
     @application.seeker = current_user
+    authorize @application
+
     @application.save
+    ApplicationsMailer.new_application(@application).deliver_later if @application.persisted?
 
     render partial: "applications/frame",
            locals: { listing: @listing, application: @application },
@@ -13,23 +18,28 @@ class ApplicationsController < ApplicationController
   end
 
   def destroy
-    @application = @listing.applications.find_by!(seeker: current_user)
+    @application = current_user.applications.find_by!(listing: @listing)
+    authorize @application
     @application.withdraw!
 
     render partial: "applications/frame", locals: { listing: @listing, application: @application }
   end
 
   def index
-    @received = Application.joins(listing: :property)
-                            .where(properties: { host_id: current_user.id })
-                            .includes(:seeker, :visit, listing: :property)
-                            .order(created_at: :desc)
+    authorize Application
+    scope = policy_scope(Application).includes(:seeker, :visit, listing: :property)
 
-    @sent = current_user.applications.includes(:visit, listing: :property).order(created_at: :desc)
+    @received = scope.joins(listing: :property)
+                      .where(properties: { host_id: current_user.id })
+                      .order(created_at: :desc)
+
+    @sent = scope.where(seeker_id: current_user.id).order(created_at: :desc)
     @pending_count = @received.count { |a| a.state == "pending" }
   end
 
   def update
+    authorize @application
+
     previously_contested =
       if params[:state] == "accepted"
         @application.listing.applications.where.not(id: @application.id).where(state: %w[pending shortlisted]).to_a
@@ -63,7 +73,7 @@ class ApplicationsController < ApplicationController
   end
 
   def set_application
-    @application = Application.find(params[:id])
+    @application = policy_scope(Application).find(params[:id])
   end
 
   def application_params

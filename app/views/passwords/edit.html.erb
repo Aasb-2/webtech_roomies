@@ -1,0 +1,31 @@
+<% content_for :title, "Reset your password" %>
+
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <h1 class="h3 mb-4">Choose a new password</h1>
+
+    <%= form_with model: @user, url: password_path(params[:token]), method: :patch, local: true do |f| %>
+      <% if @user.errors.any? %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= f.label :password, "New password", class: "form-label" %>
+        <%= f.password_field :password, required: true, autocomplete: "new-password", class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password_confirmation, "Confirm new password", class: "form-label" %>
+        <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-control" %>
+      </div>
+
+      <%= f.submit "Reset password", class: "btn btn-primary w-100" %>
+    <% end %>
+  </div>
+</div>

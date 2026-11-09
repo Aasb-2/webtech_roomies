@@ -1,16 +1,20 @@
 class AmenitiesController < ApplicationController
   before_action :set_amenity, only: [:edit, :update, :destroy]
+  after_action :verify_authorized
 
   def index
+    authorize Amenity
     @amenities = Amenity.order(:name)
   end
 
   def new
     @amenity = Amenity.new
+    authorize @amenity
   end
 
   def create
     @amenity = Amenity.new(amenity_params)
+    authorize @amenity
     if @amenity.save
       redirect_to amenities_path, notice: "Amenity created."
     else
@@ -19,9 +23,11 @@ class AmenitiesController < ApplicationController
   end
 
   def edit
+    authorize @amenity
   end
 
   def update
+    authorize @amenity
     if @amenity.update(amenity_params)
       redirect_to amenities_path, notice: "Amenity updated."
     else
@@ -30,6 +36,7 @@ class AmenitiesController < ApplicationController
   end
 
   def destroy
+    authorize @amenity
     if @amenity.destroy
       redirect_to amenities_path, notice: "Amenity deleted."
     else
