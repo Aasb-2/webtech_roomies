@@ -31,7 +31,12 @@ export default class extends Controller {
 
   render(listings) {
     if (listings.length === 0) {
-      this.resultsTarget.innerHTML = `<p class="text-muted">No listings match your search. Try adjusting your filters.</p>`
+      this.resultsTarget.innerHTML = `
+        <div class="empty-state">
+          <i class="bi bi-search empty-state__icon"></i>
+          <p class="mb-0 text-muted">No listings match your search. Try adjusting your filters.</p>
+        </div>
+      `
       return
     }
 
@@ -49,12 +54,12 @@ export default class extends Controller {
 
     return `
       <div class="col-md-4">
-        <div class="card h-100">
-          ${photo ? `<img src="${this.escape(photo)}" class="card-img-top">` : ""}
+        <div class="card h-100 listing-card">
+          ${photo ? `<div class="listing-card__img-wrap"><img src="${this.escape(photo)}" class="card-img-top"></div>` : ""}
           <div class="card-body">
             <h5 class="card-title">${this.escape(listing.property.neighborhood)} &bull; ${this.escape(this.capitalize(listing.property.property_type))}</h5>
             <p class="card-text text-muted mb-1">
-              $${Math.trunc(listing.monthly_rent).toLocaleString("en-US")}/month
+              <span class="listing-card__price">$${Math.trunc(listing.monthly_rent).toLocaleString("en-US")}/month</span>
               &bull; ${listing.property.bedrooms} Bed, ${listing.property.bathrooms} Bath
             </p>
             <p class="card-text text-muted mb-1">

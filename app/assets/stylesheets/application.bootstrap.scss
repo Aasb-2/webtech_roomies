@@ -1,2 +1,255 @@
+// =====================================================================
+// Roomies — Bootstrap theme
+// Clean & modern: emerald accent, Inter typeface, soft shadows & radii.
+//
+// The Inter font itself is loaded via <link> tags in
+// app/views/layouts/application.html.erb — this file only references
+// the family name below so Bootstrap's components pick it up.
+// =====================================================================
+
+// ---- Typography ---------------------------------------------------------
+$font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$headings-font-weight: 700;
+
+// ---- Color palette --------------------------------------------------------
+$primary:   #059669; // emerald-600 — brand accent
+$secondary: #475569; // slate-600
+$success:   #16a34a;
+$info:      #0ea5e9;
+$warning:   #d97706;
+$danger:    #dc2626;
+$light:     #f8fafc;
+$dark:      #0f172a;
+
+$body-bg:    #f7faf9;
+$body-color: #1e293b;
+
+// ---- Shape & elevation ------------------------------------------------
+$border-radius:      .65rem;
+$border-radius-sm:   .5rem;
+$border-radius-lg:   .9rem;
+$border-radius-pill: 50rem;
+
+$card-border-width:  0;
+$card-border-radius: $border-radius-lg;
+$card-box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 1px 3px rgba(15, 23, 42, .06);
+
+$btn-border-radius: .5rem;
+$btn-font-weight:   600;
+$btn-padding-y:     .5rem;
+$btn-padding-x:     1.1rem;
+
+$input-border-radius: .5rem;
+$input-border-color:  #d7dde3;
+
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+// =====================================================================
+// Roomies decorative layer
+// Everything below is additive polish on top of themed Bootstrap —
+// none of it is required for the site to work, it just dresses it up.
+// =====================================================================
+
+:root {
+  --roomies-accent-soft:   #ecfdf5; // emerald-50, soft fills
+  --roomies-accent-border: #a7f3d0; // emerald-200
+  --roomies-shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
+  --roomies-shadow-md: 0 6px 16px -4px rgba(15, 23, 42, .12);
+  --roomies-shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, .18);
+}
+
+body {
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+// ---- Navbar ---------------------------------------------------------------
+.roomies-navbar {
+  background: rgba(255, 255, 255, .85) !important;
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  box-shadow: var(--roomies-shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.roomies-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: 1.25rem;
+  color: $dark !important;
+}
+
+.roomies-brand__icon {
+  color: $primary;
+  font-size: 1.1em;
+}
+
+// ---- Hero -------------------------------------------------------------------
+.roomies-hero {
+  background: linear-gradient(135deg, var(--roomies-accent-soft) 0%, #ffffff 65%);
+  border: 1px solid var(--roomies-accent-border);
+  border-radius: $border-radius-lg;
+  padding: 3.5rem 2rem;
+}
+
+.roomies-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: $primary;
+  font-weight: 600;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .75rem;
+}
+
+// ---- Section headings -------------------------------------------------
+.section-title {
+  padding-left: .9rem;
+  border-left: 4px solid $primary;
+}
+
+// ---- Search / filter panel ---------------------------------------------
+.search-panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: $border-radius-lg;
+  box-shadow: var(--roomies-shadow-sm);
+  padding: 1.25rem;
+}
+
+// ---- Listing cards --------------------------------------------------------
+.listing-card {
+  overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--roomies-shadow-md);
+}
+
+.listing-card__img-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: $light;
+}
+
+.listing-card__img-wrap .card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+
+.listing-card:hover .listing-card__img-wrap .card-img-top {
+  transform: scale(1.04);
+}
+
+.listing-card__price {
+  color: $primary;
+  font-weight: 700;
+}
+
+// ---- Price / apply card -------------------------------------------------
+.price-card {
+  border-radius: $border-radius-lg;
+  box-shadow: var(--roomies-shadow-md);
+}
+
+@include media-breakpoint-up(md) {
+  .price-card {
+    position: sticky;
+    top: 5.5rem;
+  }
+}
+
+// ---- Auth forms (sign in / up / password / profile) ----------------------
+.auth-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: $border-radius-lg;
+  box-shadow: var(--roomies-shadow-sm);
+  padding: 2rem;
+}
+
+// ---- Applications list ----------------------------------------------------
+.application-card {
+  border-radius: $border-radius;
+  border-color: #e2e8f0 !important;
+  transition: box-shadow .15s ease;
+}
+
+.application-card:hover {
+  box-shadow: var(--roomies-shadow-sm);
+}
+
+// ---- Badges & pills ---------------------------------------------------------
+.badge {
+  border-radius: $border-radius-pill;
+  letter-spacing: .03em;
+  padding: .4em .75em;
+}
+
+// ---- List groups --------------------------------------------------------
+.list-group-item {
+  border-color: #e9edf1;
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+  background-color: var(--roomies-accent-soft);
+}
+
+// ---- Empty states ---------------------------------------------------------
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+}
+
+.empty-state__icon {
+  font-size: 2.25rem;
+  color: #cbd5e1;
+  margin-bottom: .75rem;
+  display: block;
+}
+
+// ---- Tables -----------------------------------------------------------------
+.table thead th {
+  text-transform: uppercase;
+  font-size: .72rem;
+  letter-spacing: .06em;
+  color: #64748b;
+  border-bottom-width: 1px;
+}
+
+// ---- Buttons ------------------------------------------------------------------
+.btn {
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  transform: translateY(-1px);
+}
+
+// ---- Alerts -------------------------------------------------------------------
+.alert {
+  border: none;
+  border-radius: $border-radius;
+  border-left: 4px solid currentColor;
+}
+
+// ---- Page rhythm ---------------------------------------------------------------
+main.container {
+  min-height: calc(100vh - 7rem);
+}

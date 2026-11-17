@@ -1,32 +1,37 @@
 <% content_for :title, "Roomies - Find Your Next Room" %>
 
-<div class="text-center mb-5">
+<div class="roomies-hero text-center mb-5">
+  <p class="roomies-hero__eyebrow"><i class="bi bi-stars"></i> Welcome to Roomies</p>
   <h1 class="fw-bold">Find Your Next Roommate</h1>
-  <p class="text-muted">Browse available rooms or list your space.</p>
+  <p class="text-muted mb-0">Browse available rooms or list your space.</p>
 </div>
 
 <div class="row justify-content-center mb-5">
   <div class="col-md-8">
-    <%= form_with url: listings_path, method: :get, local: true, class: "input-group" do |f| %>
-      <%= f.select :neighborhood_id, options_from_collection_for_select(Neighborhood.order(:name), :id, :name),
-            { include_blank: "Any neighborhood" }, class: "form-select" %>
-      <%= f.submit "Search", class: "btn btn-primary" %>
-    <% end %>
+    <div class="search-panel">
+      <%= form_with url: listings_path, method: :get, local: true, class: "input-group" do |f| %>
+        <%= f.select :neighborhood_id, options_from_collection_for_select(Neighborhood.order(:name), :id, :name),
+              { include_blank: "Any neighborhood" }, class: "form-select" %>
+        <%= f.submit "Search", class: "btn btn-primary" %>
+      <% end %>
+    </div>
   </div>
 </div>
 
-<h2 class="h4 mb-3">Available Rooms</h2>
+<h2 class="h4 mb-3 section-title">Available Rooms</h2>
 <div class="row g-3">
   <% Listing.published.includes(property: :neighborhood).order(created_at: :desc).limit(3).each do |listing| %>
     <div class="col-md-4">
-      <div class="card h-100">
+      <div class="card h-100 listing-card">
         <% if listing.photos.attached? %>
-          <%= image_tag listing.cover_photo.variant(resize_to_limit: [400, 300]), class: "card-img-top" %>
+          <div class="listing-card__img-wrap">
+            <%= image_tag listing.cover_photo.variant(resize_to_limit: [400, 300]), class: "card-img-top" %>
+          </div>
         <% end %>
         <div class="card-body">
           <h5 class="card-title"><%= listing.property.neighborhood.name %></h5>
           <p class="card-text text-muted">
-            $<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month &bull;
+            <span class="listing-card__price">$<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month</span> &bull;
             <%= listing.property.bedrooms %> Bed, <%= listing.property.bathrooms %> Bath
           </p>
           <%= link_to "View Details", listing_path(listing), class: "btn btn-sm btn-outline-secondary" %>
