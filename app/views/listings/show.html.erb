@@ -73,7 +73,13 @@
       </div>
     </div>
 
-    <% if @listing.property.host_id != current_user.id && @listing.published? %>
+    <% if current_user && @listing.property.host_id != current_user.id %>
+      <div class="mb-3">
+        <%= render "saved_listings/toggle", listing: @listing, saved: @saved %>
+      </div>
+    <% end %>
+
+    <% if current_user && @listing.property.host_id != current_user.id && @listing.published? %>
       <h3 class="h6">Apply to this room</h3>
       <%= render "applications/frame", listing: @listing, application: @application %>
     <% end %>

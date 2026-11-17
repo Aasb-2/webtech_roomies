@@ -30,12 +30,15 @@ Rails.application.routes.draw do
 
   resources :listings, only: [:index, :show] do
     resource :application, only: [:create, :destroy], controller: "applications"
+    resource :saved_listing, only: [:create, :destroy], controller: "saved_listings"
     resources :reports, only: [:create]
   end
 
   resources :applications, only: [:index, :update] do
     resource :visit, only: [:create, :update], controller: "visits"
   end
+
+  resources :saved_listings, only: [:index]
 
   resources :reports, only: [:index, :update]
 

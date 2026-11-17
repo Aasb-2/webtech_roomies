@@ -1,0 +1,35 @@
+<% content_for :title, "My Saved Listings - Roomies" %>
+
+<h1 class="h3 mb-4">My Saved Listings</h1>
+
+<% if @saved_listings.any? %>
+  <div class="row g-3">
+    <% @saved_listings.each do |saved_listing| %>
+      <% listing = saved_listing.listing %>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <% if listing.photos.attached? %>
+            <%= image_tag listing.cover_photo.variant(resize_to_limit: [400, 300]), class: "card-img-top" %>
+          <% end %>
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= listing.property.neighborhood.name %> &bull; <%= listing.property.property_type.capitalize %>
+            </h5>
+            <p class="card-text text-muted mb-1">
+              $<%= number_with_delimiter(listing.monthly_rent.to_i) %>/month
+            </p>
+            <p class="card-text text-muted mb-2">
+              <span class="badge bg-secondary text-uppercase"><%= listing.state %></span>
+            </p>
+            <div class="d-flex gap-2">
+              <%= link_to "View Details", listing_path(listing), class: "btn btn-sm btn-outline-secondary" %>
+              <%= render "saved_listings/toggle", listing: listing, saved: true %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-muted">You haven't saved any listings yet. <%= link_to "Browse listings", listings_path %> to find one.</p>
+<% end %>

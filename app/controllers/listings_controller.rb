@@ -17,6 +17,7 @@ class ListingsController < ApplicationController
 
     @neighborhoods = Neighborhood.order(:name)
     @amenities = Amenity.order(:name)
+    @saved_listing_ids = current_user ? current_user.saved_listings.where(listing_id: @listings).pluck(:listing_id) : []
   end
 
   def show
@@ -24,6 +25,7 @@ class ListingsController < ApplicationController
     authorize @listing
     @reviews = @listing.property.reviews.order(created_at: :desc)
     @application = current_user ? (current_user.applications.find_by(listing: @listing) || @listing.applications.build) : nil
+    @saved = current_user ? current_user.saved_listing_listings.exists?(@listing.id) : false
   end
 
   def new

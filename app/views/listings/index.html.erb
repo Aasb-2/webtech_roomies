@@ -45,6 +45,10 @@
                   <% if listing.private_bathroom? %> &bull; Private bathroom <% end %>
                 </p>
                 <%= link_to "View Details", listing_path(listing), class: "btn btn-sm btn-outline-secondary mt-2" %>
+                  <% if current_user %>
+                    <div class="mt-2">
+                      <%= render "saved_listings/toggle", listing: listing, saved: @saved_listing_ids.include?(listing.id) %>
+                    </div>
               </div>
             </div>
           </div>

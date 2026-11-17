@@ -1,0 +1,9 @@
+<turbo-frame id="<%= dom_id(listing, :saved_listing_toggle) %>">
+  <% if saved %>
+    <%= button_to "Unsave", listing_saved_listing_path(listing), method: :delete,
+          class: "btn btn-sm btn-outline-secondary" %>
+  <% else %>
+    <%= button_to "Save for later", listing_saved_listing_path(listing), method: :post,
+          class: "btn btn-sm btn-outline-primary" %>
+  <% end %>
+</turbo-frame>
